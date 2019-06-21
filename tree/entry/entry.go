@@ -36,4 +36,6 @@ func main() {
 	Myroot := myTreeNode{&root}
 	Myroot.postOrder()
 	fmt.Println()
+
+	root.Traverse()
 }

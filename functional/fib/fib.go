@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-func fibonacci() func() int {
+func Fibonacci() func() int {
 	a, b := 0, 1
 	return func() int {
 		a, b = b, a + b
@@ -11,7 +11,7 @@ func fibonacci() func() int {
 }
 
 func main() {
-	f := fibonacci()
+	f := Fibonacci()
 
 	fmt.Println(f())
 	fmt.Println(f())

@@ -5,14 +5,15 @@ import (
 	"os"
 )
 
-func readMaze(fileName string) [][]int {
-	file, err := os.Open(fileName)
+func readMaze(filename string) [][]int {
+	file, err := os.Open(filename)
 	if err != nil {
-		panic(err)
+		fmt.Println("file open err", err)
+		return nil
 	}
 
 	var row, col int
-	fmt.Fscanf(file, "%d %d", &row, &col)
+	fmt.Fscanf(file, "%d %d",&row, &col)
 
 	maze := make([][]int, row)
 	for i := range maze {
@@ -28,23 +29,24 @@ type point struct {
 	i, j int
 }
 
-var dirs = [4]point {
-	{-1, 0}, {0, -1}, {1, 0}, {0, 1}, }
+var dirs = [4]point{
+	{-1, 0}, {0, -1}, {1, 0}, {0, 1},
+}
 
 func (p point) add(r point) point {
 	return point{p.i + r.i, p.j + r.j}
 }
 
-func (p point) at(grid [][]int) (int ,bool) {
-	if p.i < 0 || p.i >= len(grid) {
+func (p point) at(maze [][]int) (int, bool) {
+	if p.i < 0 || p.i >= len(maze) {
 		return 0, false
 	}
 
-	if p.j < 0 || p.j >= len(grid[p.i]) {
+	if p.j < 0 || p.j >= len(maze[p.i]) {
 		return 0, false
 	}
 
-	return grid[p.i][p.j], true
+	return maze[p.i][p.j], true
 }
 
 func walk(maze [][]int, start, end point) [][]int {
@@ -53,7 +55,7 @@ func walk(maze [][]int, start, end point) [][]int {
 		steps[i] = make([]int, len(maze[i]))
 	}
 
-	Q := []point{start}
+	Q := []point {start}
 
 	for len(Q) > 0 {
 		cur := Q[0]
@@ -62,9 +64,6 @@ func walk(maze [][]int, start, end point) [][]int {
 		for _, dir := range dirs {
 			next := cur.add(dir)
 
-			//maze at next is 0
-			//and steps at next is 0
-			//next != start
 			val, ok := next.at(maze)
 			if !ok || val == 1 {
 				continue
@@ -79,24 +78,25 @@ func walk(maze [][]int, start, end point) [][]int {
 				continue
 			}
 
-			curSteps, _ := cur.at(steps)
-			steps[next.i][next.j] = curSteps + 1
+			curStep, _ := cur.at(steps)
+			steps[next.i][next.j] = curStep + 1
 
 			Q = append(Q, next)
 		}
+
 	}
+
 	return steps
 }
 
 func main() {
-	maze := readMaze("maze/maze.in")
+	 maze := readMaze("maze/maze.in")
+	 steps := walk(maze, point{0, 0}, point{len(maze) - 1, len(maze[0]) -1})
 
-	steps := walk(maze, point{0, 0}, point{len(maze)-1, len(maze[0])-1})
-
-	for _, row := range steps {
-		for _, val := range row {
-			fmt.Printf("%3d", val)
+	 for _, row := range steps {
+	 	for _, val := range row {
+	 		fmt.Printf("%3d", val)
 		}
-		fmt.Println()
-	}
+	 	fmt.Println()
+	 }
 }

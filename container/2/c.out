@@ -1,0 +1,9 @@
+mode: set
+github.com/crawler/container/2/nonRepeating2.go:5.48,10.31 4 1
+github.com/crawler/container/2/nonRepeating2.go:19.2,19.18 1 1
+github.com/crawler/container/2/nonRepeating2.go:10.31,11.57 1 1
+github.com/crawler/container/2/nonRepeating2.go:14.3,14.32 1 1
+github.com/crawler/container/2/nonRepeating2.go:17.3,17.23 1 1
+github.com/crawler/container/2/nonRepeating2.go:11.57,13.4 1 1
+github.com/crawler/container/2/nonRepeating2.go:14.32,16.4 1 1
+github.com/crawler/container/2/nonRepeating2.go:22.13,33.2 9 0

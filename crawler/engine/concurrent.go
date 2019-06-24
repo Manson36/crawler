@@ -36,3 +36,17 @@ func (e ConcurrentEngine) Run(seed ...Request) {
 		}
 	}
 }
+
+func createWorker(in chan Request, out chan ParserResult) {
+	go func() {
+		for {
+			request := <- in
+			result, err := worker(request)
+			if err != nil {
+				continue
+			}
+
+			out <- result
+		}
+	}()
+}

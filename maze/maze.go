@@ -59,6 +59,10 @@ func walk(maze [][]int, start, end point) [][]int {
 		cur := Q[0]
 		Q = Q[1:]
 
+		if cur == end {
+			break
+		}
+
 		for _, dir := range dirs {
 			next := cur.add(dir)
 

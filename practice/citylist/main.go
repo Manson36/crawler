@@ -49,10 +49,39 @@ func parseCityList(contents []byte) parseResult {
 		parseResult.items = append(parseResult.items, string(m[2]))
 		parseResult.requests = append(parseResult.requests, request{
 			url: string(m[1]),
-			parseFunc: nilParser,
+			parseFunc: parseCity,
 		})
 	}
 	return parseResult
+}
+
+func parseCity(contents []byte) parseResult {
+	const cityRe = `<a href="(http://album.zhenai.com/u/[0-9]+)"[^>]*>([^<]+)</a>`
+
+	re := regexp.MustCompile(cityRe)
+	matches := re.FindAllSubmatch(contents, -1)
+
+	parseResult := parseResult{}
+	for _, m := range matches {
+		parseResult.items = append(parseResult.items, "User " + string(m[2]))
+		parseResult.requests = append(parseResult.requests, request{
+			url: string(m[1]),
+			parseFunc:nilParser,
+		})
+	}
+
+	return parseResult
+}
+
+func worker (r request) (parseResult, error) {
+	log.Printf("Fetching url", r.url)
+	body, err := fetch(r.url)
+	if err != nil {
+		log.Printf("fetching err: url %s: err %v", r.url, err)
+		return parseResult{}, err
+	}
+
+	return r.parseFunc(body), nil
 }
 
 func Run(seed ...request) {
@@ -65,17 +94,14 @@ func Run(seed ...request) {
 		r := requests[0]
 		requests = requests[1:]
 
-		log.Printf("Fetching url", r.url)
-		body, err := fetch(r.url)
+		result, err := worker(r)
 		if err != nil {
-			log.Printf("fetching err: url %s: err %v", r.url, err)
 			continue
 		}
 
-		parseResult := r.parseFunc(body)
-		requests = append(requests, parseResult.requests...)
+		requests = append(requests, result.requests...)
 
-		for _, item := range parseResult.items {
+		for _, item := range result.items {
 			log.Printf("Got item %v", item)
 		}
 	}

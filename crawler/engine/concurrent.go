@@ -1,7 +1,7 @@
 package engine
 
 import (
-	"fmt"
+	"log"
 )
 
 type ConcurrentEngine struct {
@@ -11,24 +11,29 @@ type ConcurrentEngine struct {
 
 type Scheduler interface {
 	Submit(Request)
+	ConfigureMasterWorkerChan(chan Request)
 }
 
-func (e ConcurrentEngine) Run(seed ...Request) {
-	for _, r := range seed {
-		e.Scheduler.Submit(r)
-	}
-
+func (e *ConcurrentEngine) Run(seed ...Request) {
 	in := make(chan Request)
 	out := make(chan ParserResult)
+
+	e.Scheduler.ConfigureMasterWorkerChan(in)
 
 	for i:=0; i < e.WorkerCount; i++ {
 		createWorker(in, out)
 	}
 
+	for _, r := range seed {
+		e.Scheduler.Submit(r)
+	}
+
+	itemCount := 0
 	for {
 		result := <- out
 		for _, item := range result.Items {
-			fmt.Printf("Got item: %v", item)
+			log.Printf("Got item #%d: %v",itemCount, item)
+			itemCount++
 		}
 
 		for _, request := range result.Requests {

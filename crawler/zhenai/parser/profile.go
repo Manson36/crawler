@@ -90,13 +90,9 @@ func ParseProfile(contents []byte,url string, name string) engine.ParserResult {
 
 	matches := guessRe.FindAllSubmatch(contents, -1)
 	for _, m := range matches {
-		name := string(m[2])
-		url := string(m[1])
 		result.Requests = append(result.Requests, engine.Request{
-			Url: url,
-			ParserFunc: func(c []byte) engine.ParserResult {
-				return ParseProfile(c, url, name)
-			},
+			Url: string(m[1]),				//之前：string(m[2])不能直接填写，需先定义，是因为定义m值在变化，最后只能拿到一个值
+			ParserFunc: ProfileParser(string(m[2])),//string(m[2])可以直接填进去，不用先定义name，是因为在这里是函数调用，是值拷贝
 		})
 	}
 
@@ -110,5 +106,11 @@ func extractString (contents []byte, re *regexp.Regexp) string {
 		return string(match[1])
 	} else {
 		return ""
+	}
+}
+
+func ProfileParser(name string) engine.ParserFunc {
+	return func(c []byte, url string) engine.ParserResult {
+		return ParseProfile(c, url, name)
 	}
 }

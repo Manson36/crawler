@@ -38,15 +38,17 @@ func TestSave(t *testing.T) {
 		panic(err)
 	}
 
+	const index = "dating_test"
+
 	//首先save expect item
-	err = save(expected)
+	err = save(client,  expected, index)
 	if err != nil {
 		panic(err)
 	}
 
 	//然后Fetch saved item
 	resp, err := client.Get().
-		Index("dating_profile").
+		Index(index).
 		Type(expected.Type).
 		Id(expected.Id).
 		Do(context.Background())

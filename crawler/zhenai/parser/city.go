@@ -12,19 +12,15 @@ var (
 		`<a href="(http://www.zhenai.com/zhenghun/[^"]+)"`)
 )
 
-func ParseCity(contents []byte) engine.ParserResult {
+func ParseCity(contents []byte, _ string) engine.ParserResult {//定义的ParserFunc（）中添加了string，
+																// 这里也需要添加，不使用，_
 	matches := ProfileRe.FindAllSubmatch(contents, -1)
 
 	result := engine.ParserResult{}
 	for _, m := range matches {
-		name := string(m[2])
-		url := string(m[1])
-
 		result.Requests = append(result.Requests, engine.Request{
 			Url: string(m[1]),
-			ParserFunc: func(c []byte) engine.ParserResult {
-				return ParseProfile(c, url, name)
-			},
+			ParserFunc: ProfileParser(string(m[2])),
 		})
 	}
 

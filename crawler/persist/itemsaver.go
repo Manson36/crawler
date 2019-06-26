@@ -8,7 +8,13 @@ import (
 	"log"
 )
 
-func ItemSaver() chan engine.Item {
+func ItemSaver(index string) (chan engine.Item, error) {
+	//sniff 是维护elastic的集群的状态，但是elastic没有运行在本机上，实在docker上，docker只是一个内网，外面看不见，无法sniff
+	client, err := elastic.NewClient(elastic.SetSniff(false))//Must turn off sniff in docker
+	if err != nil {
+		return nil, err
+	}
+
 	out := make(chan engine.Item)
 	go func() {
 		itemCount := 0
@@ -17,22 +23,17 @@ func ItemSaver() chan engine.Item {
 			log.Printf("Item Saver: got item #%d: %v", itemCount, item)
 			itemCount++
 
-			err := save(item)
+			err := save(client, item, index)
 			if err != nil {
 				log.Printf("Item saver error: saving item %v: %v", item, err)
 			}
 		}
 	}()
 
-	return out
+	return out, nil
 }
 
-func save(item engine.Item) error {
-	//sniff 是维护elastic的集群的状态，但是elastic没有运行在本机上，实在docker上，docker只是一个内网，外面看不见，无法sniff
-	client, err := elastic.NewClient(elastic.SetSniff(false))//Must turn off sniff in docker
-	if err != nil {
-		return err
-	}
+func save(client *elastice.Client, item engine.Item, index string) error {
 
 	if 	item.Type == "" {
 		return errors.New("must supply Type")
@@ -40,7 +41,7 @@ func save(item engine.Item) error {
 
 	//Index()表示存储信息，后面参数是存储的位置
 	indexService := client.Index().
-		Index("dating_profile").
+		Index(index).
 		Type(item.Type).
 		BodyJson(item)
 	if item.Id != "" {

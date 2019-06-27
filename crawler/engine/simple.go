@@ -1,7 +1,6 @@
 package engine
 
 import (
-	"github.com/crawler/crawler/fetcher"
 	"log"
 )
 

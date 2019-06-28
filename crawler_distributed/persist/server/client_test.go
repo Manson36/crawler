@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/crawler/crawler/engine"
 	"github.com/crawler/crawler/model"
+	"github.com/crawler/crawler_distributed/config"
 	"github.com/crawler/crawler_distributed/rpcsupport"
 	"testing"
 	"time"
@@ -13,7 +14,7 @@ func TestItemSaver(t *testing.T) {
 
 	//Start TestItemSaver
 	go serveRpc(host, "test1")
-	time.Sleep(time.Second)
+	time.Sleep(time.Second)//goroutine中sever还没有起来，client就连上，会出错误
 
 	//Start ItemSaverClient
 	client, err := rpcsupport.NewClient(host)
@@ -44,7 +45,7 @@ func TestItemSaver(t *testing.T) {
 	}
 
 	result := ""
-	err = client.Call("ItemSaverService.Save",
+	err = client.Call(config.ItemSaverRpc,
 		item, &result)
 	if err != nil || result != "ok" {
 		t.Errorf("result:%s; err: %s", result, err)

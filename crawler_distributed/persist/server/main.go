@@ -1,13 +1,14 @@
 package main
 
 import (
+	"github.com/crawler/crawler_distributed/config"
 	"github.com/crawler/crawler_distributed/persist"
 	"github.com/crawler/crawler_distributed/rpcsupport"
 	"log"
 )
 
 func main() {
-	log.Fatal(serveRpc(":1234", "dating_profile"))
+	log.Fatal(serveRpc(config.ItemSaverPort, config.ElasticIndex))
 }
 
 func serveRpc(host, index string) error {
@@ -16,8 +17,8 @@ func serveRpc(host, index string) error {
 		panic(err)
 	}
 
-	return rpcsupport.ServeRpc(":1234", &persist.ItemSaverService{//Save方法是指针接受者，这里也要使用指针
+	return rpcsupport.ServeRpc(host, &persist.ItemSaverService{//Save方法是指针接受者，这里也要使用指针
 		Client: client,
-		Index: "dating_profile",
+		Index: index,
 	})
 }

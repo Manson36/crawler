@@ -5,6 +5,7 @@ import (
 	"github.com/crawler/crawler/persist"
 	"github.com/crawler/crawler/scheduler"
 	"github.com/crawler/crawler/zhenai/parser"
+	"github.com/crawler/crawler_distributed/config"
 )
 
 func main() {
@@ -23,7 +24,8 @@ func main() {
 
 	e.Run(engine.Request{
 		Url: "http://www.zhenai.com/zhenghun/shanghai",
-		ParserFunc: parser.ParseCity,
+		Parser: engine.NewFuncParser(
+			parser.ParseCityList, config.ParseCityList),
 	})
 }
 

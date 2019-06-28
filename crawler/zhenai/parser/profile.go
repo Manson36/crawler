@@ -3,6 +3,7 @@ package parser
 import (
 	"github.com/crawler/crawler/engine"
 	"github.com/crawler/crawler/model"
+	"github.com/crawler/crawler_distributed/config"
 	"regexp"
 	"strconv"
 )
@@ -36,7 +37,7 @@ var guessRe = regexp.MustCompile(
 var idUrlRe = regexp.MustCompile(
 	`http://album.zhenai.com/u/([\d]+)`)
 
-func ParseProfile(contents []byte,url string, name string) engine.ParserResult {
+func parseProfile(contents []byte,url string, name string) engine.ParserResult {
 	profile := model.Profile{}
 	profile.Name = name
 
@@ -92,7 +93,7 @@ func ParseProfile(contents []byte,url string, name string) engine.ParserResult {
 	for _, m := range matches {
 		result.Requests = append(result.Requests, engine.Request{
 			Url: string(m[1]),				//之前：string(m[2])不能直接填写，需先定义，是因为定义m值在变化，最后只能拿到一个值
-			ParserFunc: ProfileParser(string(m[2])),//string(m[2])可以直接填进去，不用先定义name，是因为在这里是函数调用，是值拷贝
+			Parser: NewProfileParser(string(m[2])),//string(m[2])可以直接填进去，不用先定义name，是因为在这里是函数调用，是值拷贝
 		})
 	}
 
@@ -109,8 +110,25 @@ func extractString (contents []byte, re *regexp.Regexp) string {
 	}
 }
 
-func ProfileParser(name string) engine.ParserFunc {
-	return func(c []byte, url string) engine.ParserResult {
-		return ParseProfile(c, url, name)
-	}
+//func ProfileParser(name string) engine.ParserFunc {
+//	return func(c []byte, url string) engine.ParserResult {
+//		return ParseProfile(c, url, name)
+//	}
+//}
+
+//分布式，自己定义一个ProfileParser, 前面的代码就不需要了
+type ProfileParser struct {
+	userName string
+}
+
+func NewProfileParser(name string) *ProfileParser {
+	return &ProfileParser{name}
+}
+
+func (p *ProfileParser) Parse(contents []byte, url string) engine.ParserResult {
+	return parseProfile(contents, url, p.userName)
+}
+
+func (p *ProfileParser) Serialize() (name string, args interface{}) {
+	return config.ParseProfile, p.userName
 }

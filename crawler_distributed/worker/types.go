@@ -7,7 +7,6 @@ import (
 	"github.com/crawler/crawler/zhenai/parser"
 	"github.com/crawler/crawler_distributed/config"
 	"log"
-	"unicode"
 )
 
 type SerializedParser struct {
@@ -101,8 +100,3 @@ func deserializeParser(p SerializedParser) (engine.Parser, error) {
 	}
 }
 
-type CrawlService struct {}
-
-func (CrawlService) Process(req engine.Request, result *engine.ParserResult) error {
-
-}

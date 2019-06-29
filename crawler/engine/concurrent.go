@@ -8,7 +8,11 @@ type ConcurrentEngine struct {
 	Scheduler Scheduler
 	WorkerCount int
 	ItemChan chan Item
+	//分布式  在这里添加字段，外面就可以去配置了
+	RequestProcessor Processor
 }
+//我们在这里把Worker的函数类型定义在这里
+type Processor func(Request) (ParserResult, error)
 
 type Scheduler interface {
 	ReadyNotifier
@@ -28,7 +32,7 @@ func (e *ConcurrentEngine) Run(seed ...Request) {
 	e.Scheduler.Run()
 
 	for i:=0; i < e.WorkerCount; i++ {
-		createWorker(e.Scheduler.WorkerChan(), out, e.Scheduler)
+		e.createWorker(e.Scheduler.WorkerChan(), out, e.Scheduler)//e 的肚子里有Processor的函数
 	}
 
 	for _, r := range seed {
@@ -58,13 +62,13 @@ func (e *ConcurrentEngine) Run(seed ...Request) {
 	}
 }
 
-func createWorker(in chan Request, out chan ParserResult, ready ReadyNotifier) {
+func (e *ConcurrentEngine) createWorker(in chan Request, out chan ParserResult, ready ReadyNotifier) {
 	go func() {
 		for {
 			//tell scheduler i'm ready
 			ready.WorkerReady(in)
 			request := <- in
-			result, err := worker(request)
+			result, err := e.RequestProcessor(request)//分布式，将这里的worker函数
 			if err != nil {
 				continue
 			}

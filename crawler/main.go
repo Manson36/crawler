@@ -14,9 +14,11 @@ func main() {
 		panic(err)
 	}
 
-	e := engine.ConcurrentEngine{Scheduler:&scheduler.QueueScheduler{},
+	e := engine.ConcurrentEngine{
+		Scheduler:&scheduler.QueueScheduler{},
 		WorkerCount: 100,
-		ItemChan: itemChan}
+		ItemChan: itemChan,
+		RequestProcessor: engine.Worker}
 	//e.Run(engine.Request{
 	//	Url: "http://www.zhenai.com/zhenghun",
 	//	ParserFunc:parser.ParseCityList,

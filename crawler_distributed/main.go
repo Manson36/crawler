@@ -5,22 +5,31 @@ import (
 	"github.com/crawler/crawler/scheduler"
 	"github.com/crawler/crawler/zhenai/parser"
 	"github.com/crawler/crawler_distributed/config"
-	"github.com/crawler/crawler_distributed/persist/client"
+	itemsaver "github.com/crawler/crawler_distributed/persist/client"
+	worker "github.com/crawler/crawler_distributed/worker/client"
 )
 
 func main() {
-	itemChan, err := client.ItemSaver(config.ItemSaverPort)
+	itemChan, err := itemsaver.ItemSaver(config.ItemSaverPort)
 	if err != nil {
 		panic(err)
 	}
 
-	e := engine.ConcurrentEngine{Scheduler:&scheduler.QueueScheduler{},
+	processor, err := worker.CreateProcessor()
+	if err != nil {
+		panic(err)
+	}
+
+	e := engine.ConcurrentEngine{
+		Scheduler:&scheduler.QueueScheduler{},
 		WorkerCount: 100,
-		ItemChan: itemChan}
+		ItemChan: itemChan,
+		RequestProcessor: processor}
 
 	e.Run(engine.Request{
 		Url: "http://www.zhenai.com/zhenghun/shanghai",
-		ParserFunc: parser.ParseCity,
+		Parser: engine.NewFuncParser(
+			parser.ParseCityList, config.ParseCityList),
 	})
 }
 

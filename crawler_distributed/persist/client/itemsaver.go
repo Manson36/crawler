@@ -21,7 +21,7 @@ func ItemSaver(host string ) (chan engine.Item, error) {
 			log.Printf("Item Saver: got item #%d: %v", itemCount, item)
 			itemCount++
 
-			//我们没收到一个元素应该做的事Call rpc
+			//我们每收到一个元素应该做的事Call rpc
 			result := ""
 			err := client.Call(config.ItemSaverRpc, item, &result)
 			if err != nil {

@@ -2,15 +2,19 @@ package fetcher
 
 import (
 	"fmt"
+	"github.com/crawler/crawler_distributed/config"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"time"
 )
 
-var rateLimiter = time.Tick(10 * time.Millisecond)
+var rateLimiter = time.Tick(time.Second / config.Qps)
 
 func Fetch(url string) ([]byte, error) {
 	<- rateLimiter
+
+	log.Printf("Fetching url %s", url)
 
 	resp, err := http.Get(url)
 	if err != nil {

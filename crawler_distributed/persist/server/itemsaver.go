@@ -1,14 +1,24 @@
 package main
 
 import (
+	"flag"
+	"fmt"
 	"github.com/crawler/crawler_distributed/config"
 	"github.com/crawler/crawler_distributed/persist"
 	"github.com/crawler/crawler_distributed/rpcsupport"
 	"log"
 )
 
+var port = flag.Int("port", 0, "the port for me to listen on")
+
 func main() {
-	log.Fatal(serveRpc(config.ItemSaverPort, config.ElasticIndex))
+	flag.Parse()
+	if *port == 0 {
+		fmt.Println("must specify a port")
+		return
+	}
+
+	log.Fatal(serveRpc(fmt.Sprintf(":%d", *port), config.ElasticIndex))
 }
 
 func serveRpc(host, index string) error {

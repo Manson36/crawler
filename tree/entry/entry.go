@@ -33,9 +33,26 @@ func main() {
 	root.Left.Right = tree.CreateNode(2)
 	root.Right.Left.SetValue(4)
 
-	Myroot := myTreeNode{&root}
-	Myroot.postOrder()
+	fmt.Print("In-order traversal: ")
+	root.Traverse()
+
+	fmt.Print("My own post-order traversal: ")
+	myRoot := myTreeNode{&root}
+	myRoot.postOrder()
 	fmt.Println()
 
-	root.Traverse()
+	nodeCount := 0
+	root.TraverseFunc(func(node *tree.Node) {
+		nodeCount++
+	})
+	fmt.Println("Node count:", nodeCount)
+
+	c := root.TraverseWithChannel()
+	maxNodeValue := 0
+	for node := range c {
+		if node.Value > maxNodeValue {
+			maxNodeValue = node.Value
+		}
+	}
+	fmt.Println("Max node value:", maxNodeValue)
 }

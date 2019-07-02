@@ -59,7 +59,8 @@ func main() {
 }
 
 func NewClient(ctx context.Context) *elastic.Client {
-	client, err := elastic.NewClient(elastic.SetSniff(false),elastic.SetURL("http://39.105.203.225:9200"))
+	client, err := elastic.NewClient(elastic.SetSniff(false),
+		elastic.SetURL("http://39.105.203.225:9200"))
 	if err != nil {
 		fmt.Println(err)
 		panic(err)

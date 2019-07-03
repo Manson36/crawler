@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/crawler/crawler/engine"
+	"github.com/olivere/elastic/v7"
 	"log"
 )
 
@@ -33,7 +34,7 @@ func ItemSaver(index string) (chan engine.Item, error) {
 	return out, nil
 }
 
-func Save(client *elastice.Client, item engine.Item, index string) error {
+func Save(client *elastic.Client, item engine.Item, index string) error {
 
 	if 	item.Type == "" {
 		return errors.New("must supply Type")

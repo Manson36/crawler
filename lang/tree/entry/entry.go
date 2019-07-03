@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/crawler/tree"
+	"github.com/crawler/lang/tree"
 )
 
 type myTreeNode struct {

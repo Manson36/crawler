@@ -48,6 +48,9 @@ func (e *ConcurrentEngine) Run(seed ...Request) {
 		result := <- out
 		for _, item := range result.Items {
 			log.Printf("Got item #%d: %v",itemCount, item)
+			go func(i Item) {
+				e.ItemChan <- i
+			}(item)
 			itemCount++
 		}
 

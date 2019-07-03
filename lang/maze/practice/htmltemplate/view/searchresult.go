@@ -1,7 +1,7 @@
 package view
 
 import (
-	"github.com/crawler/practice/htmltemplate/model"
+	"github.com/crawler/lang/maze/practicectice/htmltemplate/model"
 	"html/template"
 	"io"
 )

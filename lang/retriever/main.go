@@ -1,8 +1,8 @@
 package main
 
 import ("fmt"
-	"github.com/crawler/retriever/mock"
-	"github.com/crawler/retriever/real"
+	"github.com/crawler/lang/retrieveriever/mock"
+	"github.com/crawler/lang/retrieveriever/real"
 	"time"
 )
 

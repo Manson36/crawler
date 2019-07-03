@@ -6,6 +6,7 @@ import (
 	"github.com/crawler/crawler_distributed/config"
 	"github.com/crawler/crawler_distributed/persist"
 	"github.com/crawler/crawler_distributed/rpcsupport"
+	"github.com/olivere/elastic/v7"
 	"log"
 )
 

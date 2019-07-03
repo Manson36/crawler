@@ -1,7 +1,8 @@
 package main
 
 import (
-	rpc2 "github.com/crawler/practice/jsonrpc/rpc"
+	"github.com/crawler/lang/rpc"
+	"github.com/crawler/lang/rpcg/rpc"
 	"log"
 	"net"
 	"net/rpc"
@@ -9,7 +10,7 @@ import (
 )
 
 func main() {
-	rpc.Register(rpc2.DemoService{})
+	rpc.Register(rpcdemo.DemoService{})
 
 	listener, err := net.Listen("tcp", ":1234")
 	if err != nil {
@@ -20,8 +21,8 @@ func main() {
 		conn, err := listener.Accept()
 		if err != nil {
 			log.Printf("accept error: %v", err)
+			continue
 		}
-		continue
 
 		go jsonrpc.ServeConn(conn)
 	}

@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/crawler/queue"
+	"github.com/crawler/lang/queuequeue"
 )
 
 func main() {

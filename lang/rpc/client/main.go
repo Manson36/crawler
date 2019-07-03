@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/crawler/rpc"
+	"github.com/crawler/lang/rpcg/rpc"
 	"net"
 	"net/rpc/jsonrpc"
 )

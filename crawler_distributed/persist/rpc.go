@@ -3,11 +3,12 @@ package persist
 import (
 	"github.com/crawler/crawler/engine"
 	"github.com/crawler/crawler/persist"
+	"github.com/olivere/elastic/v7"
 	"log"
 )
 
 type ItemSaverService struct {
-	Client *elastice.client
+	Client *elastic.Client
 	Index string
 }
 

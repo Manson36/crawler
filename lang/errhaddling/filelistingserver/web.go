@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/crawler/errhaddling/filelistingserver/filelisting"
+	"github.com/crawler/lang/errhaddlingdling/filelistingserver/filelisting"
 	"log"
 	"net/http"
 	"os"

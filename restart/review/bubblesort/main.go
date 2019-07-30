@@ -18,7 +18,7 @@ func test() {
 func BubbleSort(arr *[5]int) {
 	fmt.Println("排序前arr", *arr)
 	temp := 0
-
+//减1是因为从零开始，< 而不是<= 是因为比较n-1次。
 	for i := 0; i < len(arr) -1 ; i++{
 		for j := 0; j < len(arr) - 1- i; j++ {
 			if (*arr)[j] > (*arr)[j+1] {

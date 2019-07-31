@@ -26,8 +26,9 @@ func quickSort(values []int, left, right int) {
 			p = i
 		}
 	}
-	values[p] = temp
-	if p-left > 1 {
+
+	//values[p] = temp
+	if p - left > 1 {
 		quickSort(values, left, p-1)
 	}
 	if right - p > 1 {
@@ -70,7 +71,7 @@ func Quick2Sort(values []int) {
 
 func main() {
 	var values = []int{22,3,44,5,6,11}
-	//QuickSort(values)
-	Quick2Sort(values)
+	QuickSort(values)
+	//Quick2Sort(values)
 	fmt.Println(values)
 }

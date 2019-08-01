@@ -6,8 +6,8 @@ import (
 
 func quickSort(values []int, left, right int) {
 	temp := values[left]
-	p := left
 	i, j := left, right
+	p := left
 
 	for i <= j {
 		for j >= p && values[j] >= temp {
@@ -29,10 +29,10 @@ func quickSort(values []int, left, right int) {
 
 	values[p] = temp
 	if p - left > 1 {
-		quickSort(values, left, p-1)
+		quickSort(values, left, p)
 	}
 	if right - p > 1 {
-		quickSort(values, p+1, right)
+		quickSort(values, p + 1, right)
 	}
 }
 
@@ -40,10 +40,11 @@ func QuickSort(values []int) {
 	if len(values) <= 1 {
 		return
 	}
-	quickSort(values, 0, len(values) - 1)
+
+	quickSort(values, 0, len(values)-1)
 }
 
-func Quick2Sort(values []int) {
+func QuickSort2(values []int) {
 	if len(values) <= 1 {
 		return
 	}
@@ -55,23 +56,22 @@ func Quick2Sort(values []int) {
 		fmt.Println(values)
 		if values[i] > mid {
 			values[i], values[tail] = values[tail], values[i]
-			tail --
+			tail--
 		} else {
-			values[i], values[head] = values[head], values[i]
-			head++
-			i++
+				values[i], values[head]= values[head], values[i]
+				head++
+				i++
 		}
 	}
 
-	//values[head] = mid
-	Quick2Sort(values[:head])
-	Quick2Sort(values[head+1:])
-
+	QuickSort2(values[:head])
+	QuickSort2(values[head+1:])
 }
 
 func main() {
-	var values = []int{22,3,44,5,6,11}
+	var values = []int{22,3,44,5,6,11,8,66}
 	//QuickSort(values)
-	Quick2Sort(values)
+	QuickSort2(values)
 	fmt.Println(values)
 }
+

@@ -33,7 +33,7 @@ func quickSort(values []int, left, right int) {
 	}
 }
 
-func QuickSort(values []int) {
+func quicksort(values []int) {
 	if len(values) <= 1 {
 		return
 	}
